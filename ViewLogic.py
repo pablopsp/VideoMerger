@@ -19,8 +19,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)
-
-        self.progress_bar.hide()
         
         logTextBox = QTextEditLogger(self)
         logTextBox.setFormatter(logging.Formatter(

@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.setWindowModality(QtCore.Qt.NonModal)
-        MainWindow.resize(400, 330)
+        MainWindow.resize(400, 300)
         MainWindow.setMouseTracking(False)
         MainWindow.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
         MainWindow.setUnifiedTitleAndToolBarOnMac(False)
@@ -37,13 +37,6 @@ class Ui_MainWindow(object):
         self.init_video_maker.setEnabled(False)
         self.init_video_maker.setGeometry(QtCore.QRect(200, 70, 161, 21))
         self.init_video_maker.setObjectName("init_video_maker")
-        self.progress_bar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progress_bar.setEnabled(True)
-        self.progress_bar.setGeometry(QtCore.QRect(47, 285, 330, 23))
-        self.progress_bar.setAutoFillBackground(False)
-        self.progress_bar.setProperty("value", 0)
-        self.progress_bar.setTextVisible(True)
-        self.progress_bar.setObjectName("progress_bar")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
