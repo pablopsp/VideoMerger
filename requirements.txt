@@ -1,0 +1,17 @@
+certifi==2020.12.5
+chardet==4.0.0
+decorator==4.4.2
+idna==2.10
+imageio==2.9.0
+imageio-ffmpeg==0.4.3
+moviepy==1.0.3
+numpy==1.20.1
+Pillow==8.1.2
+proglog==0.1.9
+PyQt5==5.15.4
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.8.1
+requests==2.25.1
+tqdm==4.59.0
+urllib3==1.26.4
+wincertstore==0.2
