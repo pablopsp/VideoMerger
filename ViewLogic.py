@@ -19,8 +19,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         logTextBox.setFormatter(logging.Formatter(
             '%(levelname)s - %(message)s')
         )
+        logging.basicConfig(filename='app.log', filemode='a', format='%(name)s - %(levelname)s - %(message)s')
         logging.getLogger().addHandler(logTextBox)
         logging.getLogger().setLevel(logging.INFO)
+
+        # Ignore moviepy warnings
         warnings.filterwarnings("ignore")
         
         self.look_for_dir_button.clicked.connect(self.open_file_dialog)
@@ -61,9 +64,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
                     if not os.path.exists(result_file_path):
                         logging.info(f"Uniendo video: {keyFile}.mp4")
+
                         videoclips = [VideoFileClip(video.__str__(), audio=False) for video in path_list]
                         final_clip = concatenate_videoclips(videoclips)
                         final_clip.write_videofile(result_file_path, bitrate="6000k", threads=multiprocessing.cpu_count(), verbose=False)
+                        
                         logging.info(f"Video unido en la ruta: {result_file_path}")
             
             logging.info("Union de videos finalizada")
