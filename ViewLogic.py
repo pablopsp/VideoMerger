@@ -10,7 +10,8 @@ from itertools import groupby
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QRunnable, QThreadPool
 from threading import Thread
-from moviepy.editor import VideoFileClip, concatenate_videoclips
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.compositing.concatenate import concatenate_videoclips
 
 from View import *
 
