@@ -7,11 +7,15 @@ import warnings
 from pathlib import Path
 from itertools import groupby
 
+import imageio
+imageio.plugins.ffmpeg.download()
+
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import QRunnable, QThreadPool
 from threading import Thread
 from moviepy.video.io.VideoFileClip import VideoFileClip
 from moviepy.video.compositing.concatenate import concatenate_videoclips
+from fbs_runtime.application_context.PyQt5 import ApplicationContext
 
 from View import *
 
@@ -32,6 +36,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # Ignore moviepy warnings
         warnings.filterwarnings("ignore")
         
+        self.extensionComboBox.addItems([
+            self.tr('mp4'),
+            self.tr('avi')
+        ])
         self.look_for_dir_button.clicked.connect(self.open_file_dialog)
         self.init_video_maker.clicked.connect(self.init_merge)
     
@@ -45,11 +53,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
     def init_merge(self):
-        # First group by name of the .mp4 files
-        mp4_paths = [path for path in Path(self.folderPath).rglob('*.mp4') if not 'merged' in path.__str__()]
+        # Selected extension
+        self.selectedExtension = self.extensionComboBox.currentText()
 
-        if len(mp4_paths) != 0:
-            group_by_path = [{key: list(group)} for key, group in groupby(mp4_paths, lambda x: os.path.split(x)[0])]
+        # First group by name of the extension files
+        files_paths = [path for path in Path(self.folderPath).rglob(f"*.{self.selectedExtension}") if not 'merged' in path.__str__()]
+
+        if len(files_paths) != 0:
+            group_by_path = [{key: list(group)} for key, group in groupby(files_paths, lambda x: os.path.split(x)[0])]
             # Groupby path, file dir and file name
             arranged_files = {}
             for group in group_by_path:
@@ -65,21 +76,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     os.mkdir(result_path)
 
                 # Concatenate videos by folder dir and file name with 6000 kbps bitrate
+                pool = QThreadPool.globalInstance()
+                pool.setMaxThreadCount(1)
+
                 for key_file, path_list in files_paths.items():
                     prcs = ProcessRunnable(target=self.concatenate_videos, args=(result_path, key_file, path_list))
-                    prcs.start()
-            logging.info("Union de videos finalizada")
+                    pool.start(prcs)
         
         else:
             logging.info("No hay ningun video para unir en el directorio actual")
             
 
     def concatenate_videos(self, result_path, key_file, path_list):
-        temp_result_file_path = f"{result_path}\\{key_file}.temp.mp4"
-        result_file_path = f"{result_path}\\{key_file}.mp4"
+        temp_result_file_path = f"{result_path}\\{key_file}.temp.{self.selectedExtension}"
+        result_file_path = f"{result_path}\\{key_file}.{self.selectedExtension}"
 
         if not os.path.exists(result_file_path):
-            logging.info(f"Uniendo video: {key_file}.mp4")
+            logging.info(f"Uniendo video: {key_file}")
 
             videoclips = [VideoFileClip(video.__str__(), audio=False) for video in path_list]
             final_clip = concatenate_videoclips(videoclips)
@@ -111,7 +124,6 @@ class QTextEditLogger(logging.Handler, QtCore.QObject):
         self.appendPlainText.emit(msg)        
 
 
-
 class ProcessRunnable(QRunnable):
     def __init__(self, target, args):
         QRunnable.__init__(self)
@@ -121,13 +133,10 @@ class ProcessRunnable(QRunnable):
     def run(self):
         self.t(*self.args)
 
-    def start(self):
-        QThreadPool.globalInstance().start(self)
-
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication([])
+    appctx = ApplicationContext()
     window = MainWindow()
     window.setWindowFlags(QtCore.Qt.WindowCloseButtonHint | QtCore.Qt.WindowMinimizeButtonHint)
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(appctx.app.exec_())

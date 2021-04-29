@@ -37,6 +37,12 @@ class Ui_MainWindow(object):
         self.init_video_maker.setEnabled(False)
         self.init_video_maker.setGeometry(QtCore.QRect(200, 70, 161, 21))
         self.init_video_maker.setObjectName("init_video_maker")
+        self.extensionComboBox = QtWidgets.QComboBox(self.centralwidget)
+        self.extensionComboBox.setGeometry(QtCore.QRect(100, 70, 91, 21))
+        self.extensionComboBox.setObjectName("extensionComboBox")
+        self.extensionLabel = QtWidgets.QLabel(self.centralwidget)
+        self.extensionLabel.setGeometry(QtCore.QRect(50, 70, 51, 20))
+        self.extensionLabel.setObjectName("extensionLabel")
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -48,13 +54,4 @@ class Ui_MainWindow(object):
         self.look_for_dir_button.setText(_translate("MainWindow", "Buscar directorio"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600;\">Busque el directorio el cual contiene los videos trozeados</span></p></body></html>"))
         self.init_video_maker.setText(_translate("MainWindow", "Juntar videos y cambiar bitrate"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+        self.extensionLabel.setText(_translate("MainWindow", "Extension"))

@@ -87,6 +87,29 @@
      <string>Juntar videos y cambiar bitrate</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="extensionComboBox">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>70</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="extensionLabel">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>70</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Extension</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
